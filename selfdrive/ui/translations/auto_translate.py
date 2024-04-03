@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from typing import cast
 
 import requests
+import defusedxml.ElementTree
 
 TRANSLATIONS_DIR = pathlib.Path(__file__).resolve().parent
 TRANSLATIONS_LANGUAGES = TRANSLATIONS_DIR / "languages.json"
@@ -68,7 +69,7 @@ def translate_phrase(text: str, language: str) -> str:
 
 
 def translate_file(path: pathlib.Path, language: str, all_: bool) -> None:
-  tree = ET.parse(path)
+  tree = defusedxml.ElementTree.parse(path)
 
   root = tree.getroot()
 

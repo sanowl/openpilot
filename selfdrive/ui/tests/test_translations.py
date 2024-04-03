@@ -5,12 +5,12 @@ import re
 import unittest
 import shutil
 import tempfile
-import xml.etree.ElementTree as ET
 import string
 import requests
 from parameterized import parameterized_class
 
 from openpilot.selfdrive.ui.update_translations import TRANSLATIONS_DIR, LANGUAGES_FILE, update_translations
+import defusedxml.ElementTree
 
 with open(LANGUAGES_FILE, "r") as f:
   translation_files = json.load(f)
@@ -66,7 +66,7 @@ class TestTranslations(unittest.TestCase):
       - that translation is not empty
       - that translation format arguments are consistent
     """
-    tr_xml = ET.parse(os.path.join(TRANSLATIONS_DIR, f"{self.file}.ts"))
+    tr_xml = defusedxml.ElementTree.parse(os.path.join(TRANSLATIONS_DIR, f"{self.file}.ts"))
 
     for context in tr_xml.getroot():
       for message in context.iterfind("message"):
@@ -114,7 +114,7 @@ class TestTranslations(unittest.TestCase):
 
     banned_words = {line.strip() for line in response.text.splitlines()}
 
-    for context in ET.parse(os.path.join(TRANSLATIONS_DIR, f"{self.file}.ts")).getroot():
+    for context in defusedxml.ElementTree.parse(os.path.join(TRANSLATIONS_DIR, f"{self.file}.ts")).getroot():
       for message in context.iterfind("message"):
         translation = message.find("translation")
         if translation.get("type") == "unfinished":

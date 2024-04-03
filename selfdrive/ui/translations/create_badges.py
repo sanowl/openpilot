@@ -2,11 +2,11 @@
 import json
 import os
 import requests
-import xml.etree.ElementTree as ET
 
 from openpilot.common.basedir import BASEDIR
 from openpilot.selfdrive.ui.tests.test_translations import UNFINISHED_TRANSLATION_TAG
 from openpilot.selfdrive.ui.update_translations import LANGUAGES_FILE, TRANSLATIONS_DIR
+import defusedxml.ElementTree
 
 TRANSLATION_TAG = "<translation"
 BADGE_HEIGHT = 20 + 8
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     assert r.status_code == 200, "Error downloading badge"
     content_svg = r.content.decode("utf-8")
 
-    xml = ET.fromstring(content_svg)
+    xml = defusedxml.ElementTree.fromstring(content_svg)
     assert "width" in xml.attrib
     max_badge_width = max(max_badge_width, int(xml.attrib["width"]))
 
