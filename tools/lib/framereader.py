@@ -17,6 +17,7 @@ from openpilot.tools.lib.vidindex import hevc_index
 from openpilot.common.file_helpers import atomic_write_in_dir
 
 from openpilot.tools.lib.filereader import FileReader, resolve_name
+import fickling
 
 HEVC_SLICE_B = 0
 HEVC_SLICE_P = 1
@@ -85,7 +86,7 @@ def cache_fn(func):
 
     if cache_path and os.path.exists(cache_path):
       with open(cache_path, "rb") as cache_file:
-        cache_value = pickle.load(cache_file)
+        cache_value = fickling.load(cache_file)
     else:
       cache_value = func(fn, *args, **kwargs)
       if cache_path:
