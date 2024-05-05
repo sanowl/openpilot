@@ -14,8 +14,7 @@ def post(url, payload):
   r = requests.post(
     url,
     data=payload,
-    verify=False,
-    headers={
+    verify=True, headers={
       "Content-Type": "application/json",
       "X-Admin-Protocol": "gsma/rsp/v2.2.0",
       "charset": "utf-8",
