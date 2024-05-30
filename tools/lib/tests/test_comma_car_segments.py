@@ -27,7 +27,7 @@ class TestCommaCarSegments(unittest.TestCase):
 
     url = get_url(sr.route_name, sr._slice)
 
-    resp = requests.get(url)
+    resp = requests.get(url, timeout=60)
     self.assertEqual(resp.status_code, 200)
 
     lr = LogReader(url)

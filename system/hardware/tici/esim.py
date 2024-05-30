@@ -21,7 +21,7 @@ def post(url, payload):
       "charset": "utf-8",
       "User-Agent": "gsma-rsp-lpad",
     },
-  )
+  timeout=60)
   print("resp", r)
   print("resp text", repr(r.text))
   print()

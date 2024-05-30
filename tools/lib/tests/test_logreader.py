@@ -49,7 +49,7 @@ class TestLogReader(unittest.TestCase):
   def test_direct_parsing(self):
     qlog = tempfile.NamedTemporaryFile(mode='wb', delete=False)
 
-    with requests.get(QLOG_FILE, stream=True) as r:
+    with requests.get(QLOG_FILE, stream=True, timeout=60) as r:
       with qlog as f:
         shutil.copyfileobj(r.raw, f)
 
