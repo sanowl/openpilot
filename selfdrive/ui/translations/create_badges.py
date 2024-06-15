@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import json
 import os
-import requests
 import xml.etree.ElementTree as ET
 
 from openpilot.common.basedir import BASEDIR
 from openpilot.selfdrive.ui.tests.test_translations import UNFINISHED_TRANSLATION_TAG
 from openpilot.selfdrive.ui.update_translations import LANGUAGES_FILE, TRANSLATIONS_DIR
+from security import safe_requests
 
 TRANSLATION_TAG = "<translation"
 BADGE_HEIGHT = 20 + 8
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     if unfinished_translations != 0:
       badge_message += f" ({unfinished_translations} unfinished)"
 
-    r = requests.get(f"{SHIELDS_URL}/{badge_label}-{badge_message}-{color}", timeout=10)
+    r = safe_requests.get(f"{SHIELDS_URL}/{badge_label}-{badge_message}-{color}", timeout=10)
     assert r.status_code == 200, "Error downloading badge"
     content_svg = r.content.decode("utf-8")
 

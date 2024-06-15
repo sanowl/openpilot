@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
-import requests
 import argparse
 from functools import partial
 
@@ -14,6 +13,7 @@ from openpilot.common.basedir import BASEDIR
 from openpilot.tools.lib.helpers import save_log
 
 from openpilot.tools.lib.logreader import LogReader
+from security import safe_requests
 
 juggle_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,7 +35,7 @@ def install():
   os.mkdir(INSTALL_DIR)
 
   url = os.path.join(RELEASES_URL, m + ".tar.gz")
-  with requests.get(url, stream=True, timeout=10) as r, tempfile.NamedTemporaryFile() as tmp:
+  with safe_requests.get(url, stream=True, timeout=10) as r, tempfile.NamedTemporaryFile() as tmp:
     r.raise_for_status()
     with open(tmp.name, 'wb') as tmpf:
       for chunk in r.iter_content(chunk_size=1024*1024):

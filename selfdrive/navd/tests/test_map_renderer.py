@@ -4,7 +4,6 @@ import numpy as np
 import os
 import pytest
 import unittest
-import requests
 import threading
 import http.server
 import cereal.messaging as messaging
@@ -12,6 +11,7 @@ import cereal.messaging as messaging
 from typing import Any
 from cereal.visionipc import VisionIpcClient, VisionStreamType
 from openpilot.selfdrive.test.helpers import with_processes
+from security import safe_requests
 
 LLK_DECIMATION = 10
 CACHE_PATH = "/data/mbgl-cache-navd.db"
@@ -47,7 +47,7 @@ class MapBoxInternetDisabledRequestHandler(http.server.BaseHTTPRequestHandler):
     headers = dict(self.headers)
     headers["Host"] = "api.mapbox.com"
 
-    r = requests.get(url, headers=headers, timeout=5)
+    r = safe_requests.get(url, headers=headers, timeout=5)
 
     self.send_response(r.status_code)
     self.end_headers()
