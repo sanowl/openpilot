@@ -8,10 +8,10 @@ import unittest
 import shutil
 import signal
 import subprocess
-import random
 
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.params import Params
+import secrets
 
 
 @pytest.mark.tici
@@ -135,13 +135,13 @@ class TestUpdated(unittest.TestCase):
     # make a new dir and some new files
     new_dir = os.path.join(self.git_remote_dir, "this_is_a_new_dir")
     os.mkdir(new_dir)
-    for _ in range(random.randrange(5, 30)):
-      for d in (new_dir, random.choice(all_dirs)):
+    for _ in range(secrets.SystemRandom().randrange(5, 30)):
+      for d in (new_dir, secrets.choice(all_dirs)):
         with tempfile.NamedTemporaryFile(dir=d, delete=False) as f:
-          f.write(os.urandom(random.randrange(1, 1000000)))
+          f.write(os.urandom(secrets.SystemRandom().randrange(1, 1000000)))
 
     # modify some files
-    for f in random.sample(all_files, random.randrange(5, 50)):
+    for f in secrets.SystemRandom().sample(all_files, secrets.SystemRandom().randrange(5, 50)):
       with open(f, "w+") as ff:
         txt = ff.readlines()
         ff.seek(0)
@@ -149,11 +149,11 @@ class TestUpdated(unittest.TestCase):
           ff.write(line[::-1])
 
     # remove some files
-    for f in random.sample(all_files, random.randrange(5, 50)):
+    for f in secrets.SystemRandom().sample(all_files, secrets.SystemRandom().randrange(5, 50)):
       os.remove(f)
 
     # remove some dirs
-    for d in random.sample(all_dirs, random.randrange(1, 10)):
+    for d in secrets.SystemRandom().sample(all_dirs, secrets.SystemRandom().randrange(1, 10)):
       shutil.rmtree(d)
 
     # commit the changes
@@ -272,7 +272,7 @@ class TestUpdated(unittest.TestCase):
     os.mkdir(self.neosupdate_dir)
     for _ in range(15):
       with tempfile.NamedTemporaryFile(dir=self.neosupdate_dir, delete=False) as f:
-        f.write(os.urandom(random.randrange(1, 1000000)))
+        f.write(os.urandom(secrets.SystemRandom().randrange(1, 1000000)))
 
     self._start_updater()
     self._wait_for_update(clear_param=True)

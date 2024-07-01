@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json
-import random
 import unittest
 import time
 import capnp
@@ -11,6 +10,7 @@ from openpilot.common.params import Params
 from openpilot.common.transformations.coordinates import ecef2geodetic
 
 from openpilot.selfdrive.manager.process_config import managed_processes
+import secrets
 
 
 class TestLocationdProc(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestLocationdProc(unittest.TestCase):
               'accelerometer', 'gyroscope', 'magnetometer']
 
   def setUp(self):
-    random.seed(123489234)
+    secrets.SystemRandom().seed(123489234)
 
     self.pm = messaging.PubMaster(self.LLD_MSGS)
 
@@ -66,9 +66,9 @@ class TestLocationdProc(unittest.TestCase):
   def test_params_gps(self):
     self.params.remove('LastGPSPosition')
 
-    self.x = -2710700 + (random.random() * 1e5)
-    self.y = -4280600 + (random.random() * 1e5)
-    self.z = 3850300 + (random.random() * 1e5)
+    self.x = -2710700 + (secrets.SystemRandom().random() * 1e5)
+    self.y = -4280600 + (secrets.SystemRandom().random() * 1e5)
+    self.z = 3850300 + (secrets.SystemRandom().random() * 1e5)
     self.lat, self.lon, self.alt = ecef2geodetic([self.x, self.y, self.z])
 
     # get fake messages at the correct frequency, listed in services.py

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import time
-import random
 
 from cereal import car, log
 import cereal.messaging as messaging
@@ -9,11 +8,12 @@ from openpilot.selfdrive.car.honda.interface import CarInterface
 from openpilot.selfdrive.controls.lib.events import ET, Events
 from openpilot.selfdrive.controls.lib.alertmanager import AlertManager
 from openpilot.selfdrive.manager.process_config import managed_processes
+import secrets
 
 EventName = car.CarEvent.EventName
 
 def randperc() -> float:
-  return 100. * random.random()
+  return 100. * secrets.SystemRandom().random()
 
 def cycle_alerts(duration=200, is_metric=False):
   # all alerts
@@ -75,24 +75,24 @@ def cycle_alerts(duration=200, is_metric=False):
       sm['deviceState'].cpuUsagePercent = [int(randperc()) for _ in range(8)]
       sm['modelV2'].frameDropPerc = randperc()
 
-      if random.random() > 0.25:
-        sm['modelV2'].velocity.x = [random.random(), ]
-      if random.random() > 0.25:
-        CS.vEgo = random.random()
+      if secrets.SystemRandom().random() > 0.25:
+        sm['modelV2'].velocity.x = [secrets.SystemRandom().random(), ]
+      if secrets.SystemRandom().random() > 0.25:
+        CS.vEgo = secrets.SystemRandom().random()
 
       procs = [p.get_process_state_msg() for p in managed_processes.values()]
-      random.shuffle(procs)
-      for i in range(random.randint(0, 10)):
+      secrets.SystemRandom().shuffle(procs)
+      for i in range(secrets.SystemRandom().randint(0, 10)):
         procs[i].shouldBeRunning = True
       sm['managerState'].processes = procs
 
-      sm['liveCalibration'].rpyCalib = [-1 * random.random() for _ in range(random.randint(0, 3))]
+      sm['liveCalibration'].rpyCalib = [-1 * secrets.SystemRandom().random() for _ in range(secrets.SystemRandom().randint(0, 3))]
 
       for s in sm.data.keys():
         prob = 0.3 if s in cameras else 0.08
-        sm.alive[s] = random.random() > prob
-        sm.valid[s] = random.random() > prob
-        sm.freq_ok[s] = random.random() > prob
+        sm.alive[s] = secrets.SystemRandom().random() > prob
+        sm.valid[s] = secrets.SystemRandom().random() > prob
+        sm.freq_ok[s] = secrets.SystemRandom().random() > prob
 
       a = events.create_alerts([et, ], [CP, CS, sm, is_metric, 0])
       AM.add_many(frame, a)
