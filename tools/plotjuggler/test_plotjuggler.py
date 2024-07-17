@@ -9,6 +9,7 @@ import unittest
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.timeout import Timeout
 from openpilot.tools.plotjuggler.juggle import DEMO_ROUTE, install
+from security import safe_command
 
 PJ_DIR = os.path.join(BASEDIR, "tools/plotjuggler")
 
@@ -18,7 +19,7 @@ class TestPlotJuggler(unittest.TestCase):
     install()
 
     pj = os.path.join(PJ_DIR, "juggle.py")
-    with subprocess.Popen(f'QT_QPA_PLATFORM=offscreen {pj} "{DEMO_ROUTE}/:2"',
+    with safe_command.run(subprocess.Popen, f'QT_QPA_PLATFORM=offscreen {pj} "{DEMO_ROUTE}/:2"',
                            stderr=subprocess.PIPE, shell=True, start_new_session=True) as p:
       # Wait for "Done reading Rlog data" signal from the plugin
       output = "\n"

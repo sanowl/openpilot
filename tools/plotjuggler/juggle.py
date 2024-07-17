@@ -14,6 +14,7 @@ from openpilot.common.basedir import BASEDIR
 from openpilot.tools.lib.helpers import save_log
 
 from openpilot.tools.lib.logreader import LogReader
+from security import safe_command
 
 juggle_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -67,7 +68,7 @@ def start_juggler(fn=None, dbc=None, layout=None, route_or_segment_name=None):
     extra_args += f" --window_title \"{route_or_segment_name}\""
 
   cmd = f'{PLOTJUGGLER_BIN} --buffer_size {MAX_STREAMING_BUFFER_SIZE} --plugin_folders {INSTALL_DIR}{extra_args}'
-  subprocess.call(cmd, shell=True, env=env, cwd=juggle_dir)
+  safe_command.run(subprocess.call, cmd, shell=True, env=env, cwd=juggle_dir)
 
 def process(can, lr):
   return [d for d in lr if can or d.which() not in ['can', 'sendcan']]

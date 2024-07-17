@@ -3,9 +3,10 @@ import subprocess
 import sys
 
 from openpilot.common.prefix import OpenpilotPrefix
+from security import safe_command
 
 
 with OpenpilotPrefix():
-  ret = subprocess.call(sys.argv[1:])
+  ret = safe_command.run(subprocess.call, sys.argv[1:])
 
 exit(ret)

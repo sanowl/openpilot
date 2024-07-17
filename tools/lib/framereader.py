@@ -17,6 +17,7 @@ from openpilot.tools.lib.vidindex import hevc_index
 from openpilot.common.file_helpers import atomic_write_in_dir
 
 from openpilot.tools.lib.filereader import FileReader, resolve_name
+from security import safe_command
 
 HEVC_SLICE_B = 0
 HEVC_SLICE_P = 1
@@ -326,7 +327,7 @@ class VideoStreamDecompressor:
       "-pix_fmt", self.pix_fmt,
       "pipe:1"
     ]
-    self.proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    self.proc = safe_command.run(subprocess.Popen, cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     try:
       self.t.start()
 

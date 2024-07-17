@@ -5,6 +5,7 @@ import time
 import unittest
 import subprocess
 import signal
+from security import safe_command
 
 if "CI" in os.environ:
   def tqdm(x):
@@ -53,7 +54,7 @@ class TestValgrind(unittest.TestCase):
     os.chdir(os.path.join(BASEDIR, cwd))
     # Run valgrind on a process
     command = "valgrind --leak-check=full " + arg
-    p = subprocess.Popen(command, stderr=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
+    p = safe_command.run(subprocess.Popen, command, stderr=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
 
     while not self.replay_done:
       time.sleep(0.1)

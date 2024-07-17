@@ -35,6 +35,7 @@
 import os
 import sys
 from subprocess import DEVNULL, call, STDOUT
+from security import safe_command
 
 
 class CMakeBuilder:
@@ -96,8 +97,7 @@ class CMakeBuilder:
             os.chdir(self._build_dir)
             cmd_str = self.get_cmd1_cmake()
             print(f'call("{cmd_str})"')
-            retcode = call(
-                cmd_str,
+            retcode = safe_command.run(call, cmd_str,
                 shell=True,
                 stdout=None if verbose else DEVNULL,
                 stderr=None if verbose else STDOUT
@@ -106,8 +106,7 @@ class CMakeBuilder:
                 raise RuntimeError(f'CMake command "{cmd_str}" was terminated by signal {retcode}')
             cmd_str = self.get_cmd2_build()
             print(f'call("{cmd_str}")')
-            retcode = call(
-                cmd_str,
+            retcode = safe_command.run(call, cmd_str,
                 shell=True,
                 stdout=None if verbose else DEVNULL,
                 stderr=None if verbose else STDOUT
@@ -116,8 +115,7 @@ class CMakeBuilder:
                 raise RuntimeError(f'Build command "{cmd_str}" was terminated by signal {retcode}')
             cmd_str = self.get_cmd3_install()
             print(f'call("{cmd_str}")')
-            retcode = call(
-                cmd_str,
+            retcode = safe_command.run(call, cmd_str,
                 shell=True,
                 stdout=None if verbose else DEVNULL,
                 stderr=None if verbose else STDOUT

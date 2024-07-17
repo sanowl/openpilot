@@ -11,6 +11,7 @@ from openpilot.selfdrive.car.tests.routes import routes as test_car_models_route
 from openpilot.selfdrive.test.process_replay.test_processes import source_segments as replay_segments
 from openpilot.tools.lib.azure_container import AzureContainer
 from openpilot.tools.lib.openpilotcontainers import DataCIContainer, DataProdContainer, OpenpilotCIContainer
+from security import safe_command
 
 SOURCES: List[AzureContainer] = [
   DataProdContainer,
@@ -56,7 +57,7 @@ def sync_to_ci_public(route: str) -> bool:
     ]
 
     try:
-      result = subprocess.call(cmd, stdout=subprocess.DEVNULL)
+      result = safe_command.run(subprocess.call, cmd, stdout=subprocess.DEVNULL)
       if result == 0:
         print("Success")
         return True
