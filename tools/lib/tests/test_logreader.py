@@ -4,9 +4,9 @@ import numpy as np
 import unittest
 import pytest
 from parameterized import parameterized
-import requests
 from openpilot.tools.lib.logreader import LogReader, parse_indirect, parse_slice, ReadMode
 from openpilot.tools.lib.route import Route, SegmentRange
+from security import safe_requests
 
 NUM_SEGS = 17 # number of segments in the test route
 ALL_SEGS = list(np.arange(NUM_SEGS))
@@ -49,7 +49,7 @@ class TestLogReader(unittest.TestCase):
   def test_direct_parsing(self):
     qlog = tempfile.NamedTemporaryFile(mode='wb', delete=False)
 
-    with requests.get(QLOG_FILE, stream=True) as r:
+    with safe_requests.get(QLOG_FILE, stream=True) as r:
       with qlog as f:
         shutil.copyfileobj(r.raw, f)
 
