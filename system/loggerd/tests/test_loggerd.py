@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
 import os
-import random
 import string
 import subprocess
 import time
@@ -23,6 +22,7 @@ from openpilot.system.version import get_version
 from openpilot.tools.lib.logreader import LogReader
 from cereal.visionipc import VisionIpcServer, VisionStreamType
 from openpilot.common.transformations.camera import tici_f_frame_size, tici_d_frame_size, tici_e_frame_size
+import secrets
 
 SentinelType = log.Sentinel.SentinelType
 
@@ -81,12 +81,12 @@ class TestLoggerd:
       assert pm.wait_for_readers_to_update(s, timeout=5)
 
     sent_msgs = defaultdict(list)
-    for _ in range(random.randint(2, 10) * 100):
+    for _ in range(secrets.SystemRandom().randint(2, 10) * 100):
       for s in services:
         try:
           m = messaging.new_message(s)
         except Exception:
-          m = messaging.new_message(s, random.randint(2, 10))
+          m = messaging.new_message(s, secrets.SystemRandom().randint(2, 10))
         pm.send(s, m)
         sent_msgs[s].append(m)
 
@@ -97,9 +97,9 @@ class TestLoggerd:
     return sent_msgs
 
   def test_init_data_values(self):
-    os.environ["CLEAN"] = random.choice(["0", "1"])
+    os.environ["CLEAN"] = secrets.choice(["0", "1"])
 
-    dongle  = ''.join(random.choice(string.printable) for n in range(random.randint(1, 100)))
+    dongle  = ''.join(secrets.choice(string.printable) for n in range(secrets.SystemRandom().randint(1, 100)))
     fake_params = [
       # param, initData field, value
       ("DongleId", "dongleId", dongle),
@@ -152,8 +152,8 @@ class TestLoggerd:
       vipc_server.create_buffers_with_sizes(stream_type, 40, False, *(frame_spec))
     vipc_server.start_listener()
 
-    num_segs = random.randint(2, 5)
-    length = random.randint(1, 3)
+    num_segs = secrets.SystemRandom().randint(2, 5)
+    length = secrets.SystemRandom().randint(1, 3)
     os.environ["LOGGERD_SEGMENT_LENGTH"] = str(length)
     managed_processes["loggerd"].start()
     managed_processes["encoderd"].start()
@@ -185,7 +185,7 @@ class TestLoggerd:
 
   def test_bootlog(self):
     # generate bootlog with fake launch log
-    launch_log = ''.join(str(random.choice(string.printable)) for _ in range(100))
+    launch_log = ''.join(str(secrets.choice(string.printable)) for _ in range(100))
     with open("/tmp/launch_log", "w") as f:
       f.write(launch_log)
 
@@ -218,8 +218,8 @@ class TestLoggerd:
     qlog_services = [s for s in CEREAL_SERVICES if SERVICE_LIST[s].decimation is not None]
     no_qlog_services = [s for s in CEREAL_SERVICES if SERVICE_LIST[s].decimation is None]
 
-    services = random.sample(qlog_services, random.randint(2, min(10, len(qlog_services)))) + \
-               random.sample(no_qlog_services, random.randint(2, min(10, len(no_qlog_services))))
+    services = secrets.SystemRandom().sample(qlog_services, secrets.SystemRandom().randint(2, min(10, len(qlog_services)))) + \
+               secrets.SystemRandom().sample(no_qlog_services, secrets.SystemRandom().randint(2, min(10, len(no_qlog_services))))
     sent_msgs = self._publish_random_messages(services)
 
     qlog_path = os.path.join(self._get_latest_log_dir(), "qlog")
@@ -245,7 +245,7 @@ class TestLoggerd:
         assert recv_cnt == expected_cnt, f"expected {expected_cnt} msgs for {s}, got {recv_cnt}"
 
   def test_rlog(self):
-    services = random.sample(CEREAL_SERVICES, random.randint(5, 10))
+    services = secrets.SystemRandom().sample(CEREAL_SERVICES, secrets.SystemRandom().randint(5, 10))
     sent_msgs = self._publish_random_messages(services)
 
     lr = list(LogReader(os.path.join(self._get_latest_log_dir(), "rlog")))
@@ -262,14 +262,14 @@ class TestLoggerd:
       assert sent.to_bytes() == m.as_builder().to_bytes()
 
   def test_preserving_flagged_segments(self):
-    services = set(random.sample(CEREAL_SERVICES, random.randint(5, 10))) | {"userFlag"}
+    services = set(secrets.SystemRandom().sample(CEREAL_SERVICES, secrets.SystemRandom().randint(5, 10))) | {"userFlag"}
     self._publish_random_messages(services)
 
     segment_dir = self._get_latest_log_dir()
     assert getxattr(segment_dir, PRESERVE_ATTR_NAME) == PRESERVE_ATTR_VALUE
 
   def test_not_preserving_unflagged_segments(self):
-    services = set(random.sample(CEREAL_SERVICES, random.randint(5, 10))) - {"userFlag"}
+    services = set(secrets.SystemRandom().sample(CEREAL_SERVICES, secrets.SystemRandom().randint(5, 10))) - {"userFlag"}
     self._publish_random_messages(services)
 
     segment_dir = self._get_latest_log_dir()

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import time
-import random
 import unittest
 import subprocess
 
@@ -8,6 +7,7 @@ from panda import Panda
 from openpilot.system.hardware import TICI, HARDWARE
 from openpilot.system.hardware.tici.hardware import Tici
 from openpilot.system.hardware.tici.amplifier import Amplifier
+import secrets
 
 
 class TestAmplifier(unittest.TestCase):
@@ -59,7 +59,7 @@ class TestAmplifier(unittest.TestCase):
       time.sleep(0.1)
 
       self.panda.set_siren(True)
-      time.sleep(random.randint(0, 5))
+      time.sleep(secrets.SystemRandom().randint(0, 5))
 
       amp = Amplifier(debug=True)
       r = amp.initialize_configuration(Tici().get_device_type())
