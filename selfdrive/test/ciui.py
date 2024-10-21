@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import signal
 import subprocess
+from security import safe_command
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 signal.signal(signal.SIGTERM, signal.SIG_DFL)
@@ -47,7 +48,7 @@ class Window(QWidget):
 
   def update(self):
     for cmd, label in self.labels.items():
-      out = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+      out = safe_command.run(subprocess.run, cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                            shell=True, check=False, encoding='utf8').stdout
       label.setText(out.strip())
 
