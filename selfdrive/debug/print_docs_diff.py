@@ -2,10 +2,10 @@
 import argparse
 from collections import defaultdict
 import difflib
-import pickle
 
 from openpilot.selfdrive.car.docs import get_all_car_info
 from openpilot.selfdrive.car.docs_definitions import Column
+import fickling
 
 FOOTNOTE_TAG = "<sup>{}</sup>"
 STAR_ICON = '<a href="##"><img valign="top" ' + \
@@ -19,7 +19,7 @@ ARROW_SYMBOL = "➡️"
 
 def load_base_car_info(path):
   with open(path, "rb") as f:
-    return pickle.load(f)
+    return fickling.load(f)
 
 
 def match_cars(base_cars, new_cars):
