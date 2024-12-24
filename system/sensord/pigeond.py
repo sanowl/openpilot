@@ -4,7 +4,6 @@ import time
 import signal
 import serial
 import struct
-import requests
 import urllib.parse
 from datetime import datetime
 from typing import List, Optional, Tuple
@@ -15,6 +14,7 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.system.hardware import TICI
 from openpilot.common.gpio import gpio_init, gpio_set
 from openpilot.system.hardware.tici.pins import GPIO
+from security import safe_requests
 
 UBLOX_TTY = "/dev/ttyHS0"
 
@@ -44,7 +44,7 @@ def add_ubx_checksum(msg: bytes) -> bytes:
 def get_assistnow_messages(token: bytes) -> List[bytes]:
   # make request
   # TODO: implement adding the last known location
-  r = requests.get("https://online-live2.services.u-blox.com/GetOnlineData.ashx", params=urllib.parse.urlencode({
+  r = safe_requests.get("https://online-live2.services.u-blox.com/GetOnlineData.ashx", params=urllib.parse.urlencode({
     'token': token,
     'gnss': 'gps,glo',
     'datatype': 'eph,alm,aux',

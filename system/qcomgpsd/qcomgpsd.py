@@ -27,6 +27,7 @@ from openpilot.system.qcomgpsd.structs import (dict_unpacker, position_report, r
                                               LOG_GNSS_GPS_MEASUREMENT_REPORT, LOG_GNSS_GLONASS_MEASUREMENT_REPORT,
                                               LOG_GNSS_POSITION_REPORT, LOG_GNSS_OEMDRE_MEASUREMENT_REPORT,
                                               LOG_GNSS_OEMDRE_SVPOLY_REPORT)
+from security import safe_requests
 
 DEBUG = int(os.getenv("DEBUG", "0"))==1
 ASSIST_DATA_FILE = '/tmp/xtra3grc.bin'
@@ -102,7 +103,7 @@ def gps_enabled() -> bool:
 
 def download_assistance():
   try:
-    response = requests.get(ASSISTANCE_URL, timeout=5, stream=True)
+    response = safe_requests.get(ASSISTANCE_URL, timeout=5, stream=True)
 
     with open(ASSIST_DATA_FILE_DOWNLOAD, 'wb') as fp:
       for chunk in response.iter_content(chunk_size=8192):

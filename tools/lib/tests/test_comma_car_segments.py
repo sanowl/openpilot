@@ -1,11 +1,10 @@
 
 
 import unittest
-
-import requests
 from openpilot.tools.lib.comma_car_segments import get_comma_car_segments_database, get_url
 from openpilot.tools.lib.logreader import LogReader, get_first_message
 from openpilot.tools.lib.route import SegmentRange
+from security import safe_requests
 
 
 class TestCommaCarSegments(unittest.TestCase):
@@ -27,7 +26,7 @@ class TestCommaCarSegments(unittest.TestCase):
 
     url = get_url(sr.route_name, sr._slice)
 
-    resp = requests.get(url)
+    resp = safe_requests.get(url)
     self.assertEqual(resp.status_code, 200)
 
     lr = LogReader(url)

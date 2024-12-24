@@ -11,6 +11,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import requests
 from Crypto.Hash import SHA512
+from security import safe_requests
 
 CA_FORMAT_INDEX = 0x96824d9c7b129ff9
 CA_FORMAT_TABLE = 0xe75b9e112f17417d
@@ -90,7 +91,7 @@ def parse_caibx(caibx_path: str) -> List[Chunk]:
   if os.path.isfile(caibx_path):
     caibx = open(caibx_path, 'rb')
   else:
-    resp = requests.get(caibx_path, timeout=CAIBX_DOWNLOAD_TIMEOUT)
+    resp = safe_requests.get(caibx_path, timeout=CAIBX_DOWNLOAD_TIMEOUT)
     resp.raise_for_status()
     caibx = io.BytesIO(resp.content)
 

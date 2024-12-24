@@ -16,6 +16,7 @@ from openpilot.system.version import get_commit
 from openpilot.tools.lib.framereader import FrameReader
 from openpilot.tools.lib.logreader import LogReader
 from openpilot.tools.lib.helpers import save_log
+from security import safe_requests
 
 TEST_ROUTE = "2f4452b03ccb98f0|2022-12-03--13-45-30"
 SEGMENT = 6
@@ -140,7 +141,6 @@ if __name__ == "__main__":
   # Update tile refs
   if update:
     import urllib
-    import requests
     import threading
     import http.server
     from openpilot.tools.lib.openpilotci import upload_bytes
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
       def do_GET(self):
         assert len(self.path) > 10  # Sanity check on path length
-        r = requests.get(f'https://api.mapbox.com{self.path}', timeout=30)
+        r = safe_requests.get(f'https://api.mapbox.com{self.path}', timeout=30)
         upload_bytes(r.content, urllib.parse.urlparse(self.path).path.lstrip('/'))
         self.send_response(r.status_code)
         self.send_header('Content-type','text/html')
