@@ -2,7 +2,6 @@
 import math
 import os
 import pytest
-import random
 import shutil
 import subprocess
 import time
@@ -18,6 +17,7 @@ from openpilot.system.hardware import TICI
 from openpilot.selfdrive.manager.process_config import managed_processes
 from openpilot.tools.lib.logreader import LogReader
 from openpilot.system.hardware.hw import Paths
+import secrets
 
 SEGMENT_LENGTH = 2
 FULL_SIZE = 2507572
@@ -63,7 +63,7 @@ class TestEncoder(unittest.TestCase):
     time.sleep(1.0)
     managed_processes['camerad'].start()
 
-    num_segments = int(os.getenv("SEGMENTS", random.randint(10, 15)))
+    num_segments = int(os.getenv("SEGMENTS", secrets.SystemRandom().randint(10, 15)))
 
     # wait for loggerd to make the dir for first segment
     route_prefix_path = None
