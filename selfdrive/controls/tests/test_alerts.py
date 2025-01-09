@@ -3,7 +3,6 @@ import copy
 import json
 import os
 import unittest
-import random
 from PIL import Image, ImageDraw, ImageFont
 
 from cereal import log, car
@@ -13,6 +12,7 @@ from openpilot.common.params import Params
 from openpilot.selfdrive.controls.lib.events import Alert, EVENTS, ET
 from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert
 from openpilot.selfdrive.test.process_replay.process_replay import CONFIGS
+import secrets
 
 AlertSize = log.ControlsState.AlertSize
 
@@ -123,7 +123,7 @@ class TestAlerts(unittest.TestCase):
     params = Params()
     for i in range(50):
       # set the alert
-      a = random.choice(list(self.offroad_alerts))
+      a = secrets.choice(list(self.offroad_alerts))
       alert = self.offroad_alerts[a]
       set_offroad_alert(a, True, extra_text="a"*i)
 

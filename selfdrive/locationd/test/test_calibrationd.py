@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import random
 import unittest
 
 import numpy as np
@@ -9,6 +8,7 @@ from cereal import log
 from openpilot.common.params import Params
 from openpilot.selfdrive.locationd.calibrationd import Calibrator, INPUTS_NEEDED, INPUTS_WANTED, BLOCK_SIZE, MIN_SPEED_FILTER, \
                                                          MAX_YAW_RATE_FILTER, SMOOTH_CYCLES, HEIGHT_INIT, MAX_ALLOWED_PITCH_SPREAD, MAX_ALLOWED_YAW_SPREAD
+import secrets
 
 
 def process_messages(c, cam_odo_calib, cycles,
@@ -35,9 +35,9 @@ class TestCalibrationd(unittest.TestCase):
 
   def test_read_saved_params(self):
     msg = messaging.new_message('liveCalibration')
-    msg.liveCalibration.validBlocks = random.randint(1, 10)
-    msg.liveCalibration.rpyCalib = [random.random() for _ in range(3)]
-    msg.liveCalibration.height = [random.random() for _ in range(1)]
+    msg.liveCalibration.validBlocks = secrets.SystemRandom().randint(1, 10)
+    msg.liveCalibration.rpyCalib = [secrets.SystemRandom().random() for _ in range(3)]
+    msg.liveCalibration.height = [secrets.SystemRandom().random() for _ in range(1)]
     Params().put("CalibrationParams", msg.to_bytes())
     c = Calibrator(param_put=True)
 
