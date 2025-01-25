@@ -13,6 +13,7 @@ import wave
 from openpilot.common.basedir import BASEDIR
 from openpilot.system.webrtc.webrtcd import StreamRequestBody
 from openpilot.common.params import Params
+from security import safe_command
 
 logger = logging.getLogger("bodyteleop")
 logging.basicConfig(level=logging.INFO)
@@ -53,7 +54,7 @@ async def play_sound(sound):
 ## SSL
 def create_ssl_cert(cert_path, key_path):
   try:
-    proc = subprocess.run(f'openssl req -x509 -newkey rsa:4096 -nodes -out {cert_path} -keyout {key_path} \
+    proc = safe_command.run(subprocess.run, f'openssl req -x509 -newkey rsa:4096 -nodes -out {cert_path} -keyout {key_path} \
                           -days 365 -subj "/C=US/ST=California/O=commaai/OU=comma body"',
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     proc.check_returncode()
