@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import time
-import pickle
 import numpy as np
 import cereal.messaging as messaging
 from cereal import car, log
@@ -23,6 +22,7 @@ from openpilot.selfdrive.modeld.parse_model_outputs import Parser
 from openpilot.selfdrive.modeld.fill_model_msg import fill_model_msg, fill_pose_msg, PublishState
 from openpilot.selfdrive.modeld.constants import ModelConstants
 from openpilot.selfdrive.modeld.models.commonmodel_pyx import ModelFrame, CLContext
+import fickling
 
 PROCESS_NAME = "selfdrive.modeld.modeld"
 SEND_RAW_PRED = os.getenv('SEND_RAW_PRED')
@@ -65,7 +65,7 @@ class ModelState:
     }
 
     with open(METADATA_PATH, 'rb') as f:
-      model_metadata = pickle.load(f)
+      model_metadata = fickling.load(f)
 
     self.output_slices = model_metadata['output_slices']
     net_output_size = model_metadata['output_shapes']['outputs'][1]
