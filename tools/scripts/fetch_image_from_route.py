@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+from security import safe_requests
 
 if len(sys.argv) < 4:
   print(f"{sys.argv[0]} <route> <segment> <frame number> [front|wide|driver]")
@@ -11,8 +12,6 @@ cameras = {
   "wide": "ecameras",
   "driver": "dcameras"
 }
-
-import requests
 from PIL import Image
 from openpilot.tools.lib.auth_config import get_token
 from openpilot.tools.lib.framereader import FrameReader
@@ -25,7 +24,7 @@ frame = int(sys.argv[3])
 camera = cameras[sys.argv[4]] if len(sys.argv) > 4 and sys.argv[4] in cameras else "cameras"
 
 url = f'https://api.commadotai.com/v1/route/{route}/files'
-r = requests.get(url, headers={"Authorization": f"JWT {jwt}"}, timeout=10)
+r = safe_requests.get(url, headers={"Authorization": f"JWT {jwt}"}, timeout=10)
 assert r.status_code == 200
 print("got api response")
 
