@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import copy
-import random
 import time
 import unittest
 from collections import defaultdict
@@ -15,6 +14,7 @@ from openpilot.selfdrive.boardd.boardd import can_list_to_can_capnp
 from openpilot.selfdrive.car import make_can_msg
 from openpilot.system.hardware import TICI
 from openpilot.selfdrive.test.helpers import phone_only, with_processes
+import secrets
 
 
 class TestBoardd(unittest.TestCase):
@@ -63,12 +63,12 @@ class TestBoardd(unittest.TestCase):
       print(f"boardd loopback {i}/{n}")
 
       sent_msgs = defaultdict(set)
-      for _ in range(random.randrange(20, 100)):
+      for _ in range(secrets.SystemRandom().randrange(20, 100)):
         to_send = []
-        for __ in range(random.randrange(20)):
-          bus = random.choice([b for b in range(3*num_pandas) if b % 4 != 3])
-          addr = random.randrange(1, 1<<29)
-          dat = bytes(random.getrandbits(8) for _ in range(random.randrange(1, 9)))
+        for __ in range(secrets.SystemRandom().randrange(20)):
+          bus = secrets.choice([b for b in range(3*num_pandas) if b % 4 != 3])
+          addr = secrets.SystemRandom().randrange(1, 1<<29)
+          dat = bytes(secrets.SystemRandom().getrandbits(8) for _ in range(secrets.SystemRandom().randrange(1, 9)))
           sent_msgs[bus].add((addr, dat))
           to_send.append(make_can_msg(addr, dat, bus))
         sendcan.send(can_list_to_can_capnp(to_send, msgtype='sendcan'))

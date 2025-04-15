@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import pytest
-import random
 import time
 import unittest
 from collections import defaultdict
@@ -13,6 +12,7 @@ from openpilot.selfdrive.car.fingerprints import FW_VERSIONS
 from openpilot.selfdrive.car.fw_versions import FW_QUERY_CONFIGS, FUZZY_EXCLUDE_ECUS, VERSIONS, build_fw_dict, \
                                                 match_fw_to_car, get_fw_versions, get_present_ecus
 from openpilot.selfdrive.car.vin import get_vin
+import secrets
 
 CarFw = car.CarParams.CarFw
 Ecu = car.CarParams.Ecu
@@ -41,7 +41,7 @@ class TestFwFingerprint(unittest.TestCase):
       fw = []
       for ecu, fw_versions in ecus.items():
         ecu_name, addr, sub_addr = ecu
-        fw.append({"ecu": ecu_name, "fwVersion": random.choice(fw_versions), 'brand': brand,
+        fw.append({"ecu": ecu_name, "fwVersion": secrets.choice(fw_versions), 'brand': brand,
                    "address": addr, "subAddress": 0 if sub_addr is None else sub_addr})
       CP.carFw = fw
       _, matches = match_fw_to_car(CP.carFw, allow_fuzzy=False)
@@ -59,7 +59,7 @@ class TestFwFingerprint(unittest.TestCase):
       fw = []
       for ecu, fw_versions in ecus.items():
         ecu_name, addr, sub_addr = ecu
-        fw.append({"ecu": ecu_name, "fwVersion": random.choice(fw_versions), 'brand': brand,
+        fw.append({"ecu": ecu_name, "fwVersion": secrets.choice(fw_versions), 'brand': brand,
                    "address": addr, "subAddress": 0 if sub_addr is None else sub_addr})
       CP.carFw = fw
       _, matches = match_fw_to_car(CP.carFw, allow_exact=False, log=False)
@@ -81,7 +81,7 @@ class TestFwFingerprint(unittest.TestCase):
       ecu_name, addr, sub_addr = ecu
       for _ in range(5):
         # Add multiple FW versions to simulate ECU returning to multiple queries in a brand
-        fw.append({"ecu": ecu_name, "fwVersion": random.choice(ecus[ecu]), 'brand': brand,
+        fw.append({"ecu": ecu_name, "fwVersion": secrets.choice(ecus[ecu]), 'brand': brand,
                    "address": addr, "subAddress": 0 if sub_addr is None else sub_addr})
       CP = car.CarParams.new_message(carFw=fw)
       _, matches = match_fw_to_car(CP.carFw, allow_exact=False, log=False)

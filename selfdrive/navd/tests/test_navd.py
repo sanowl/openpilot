@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import json
-import random
 import unittest
 import numpy as np
 
 import cereal.messaging as messaging
 from openpilot.common.params import Params
 from openpilot.selfdrive.manager.process_config import managed_processes
+import secrets
 
 
 class TestNavd(unittest.TestCase):
@@ -52,8 +52,8 @@ class TestNavd(unittest.TestCase):
 
   def test_random(self):
     for _ in range(10):
-      start = {"latitude": random.uniform(-90, 90), "longitude": random.uniform(-180, 180)}
-      end = {"latitude": random.uniform(-90, 90), "longitude": random.uniform(-180, 180)}
+      start = {"latitude": secrets.SystemRandom().uniform(-90, 90), "longitude": secrets.SystemRandom().uniform(-180, 180)}
+      end = {"latitude": secrets.SystemRandom().uniform(-90, 90), "longitude": secrets.SystemRandom().uniform(-180, 180)}
       self._check_route(start, end, check_coords=False)
 
 

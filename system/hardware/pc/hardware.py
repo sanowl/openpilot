@@ -1,7 +1,7 @@
-import random
 
 from cereal import log
 from openpilot.system.hardware.base import HardwareBase, ThermalConfig
+import secrets
 
 NetworkType = log.DeviceState.NetworkType
 NetworkStrength = log.DeviceState.NetworkStrength
@@ -24,7 +24,7 @@ class Pc(HardwareBase):
     print("uninstall")
 
   def get_imei(self, slot):
-    return "%015d" % random.randint(0, 1 << 32)
+    return "%015d" % secrets.SystemRandom().randint(0, 1 << 32)
 
   def get_serial(self):
     return "cccccccc"

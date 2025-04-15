@@ -3,7 +3,6 @@ import capnp
 import os
 import importlib
 import pytest
-import random
 import unittest
 from collections import defaultdict, Counter
 import hypothesis.strategies as st
@@ -28,6 +27,7 @@ from openpilot.tools.lib.logreader import LogReader
 from openpilot.tools.lib.route import Route, SegmentName, RouteName
 
 from panda.tests.libpanda import libpanda_py
+import secrets
 
 EventName = car.CarEvent.EventName
 PandaType = log.PandaState.PandaType
@@ -55,7 +55,7 @@ def get_test_cases() -> List[Tuple[str, Optional[CarTestRoute]]]:
 
   else:
     segment_list = read_segment_list(os.path.join(BASEDIR, INTERNAL_SEG_LIST))
-    segment_list = random.sample(segment_list, INTERNAL_SEG_CNT or len(segment_list))
+    segment_list = secrets.SystemRandom().sample(segment_list, INTERNAL_SEG_CNT or len(segment_list))
     for platform, segment in segment_list:
       segment_name = SegmentName(segment)
       test_cases.append((platform, CarTestRoute(segment_name.route_name.canonical_name, platform,

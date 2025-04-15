@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # type: ignore
-import random
 from collections import defaultdict
 
 from tqdm import tqdm
@@ -10,6 +9,7 @@ from openpilot.selfdrive.car.toyota.values import FW_VERSIONS as TOYOTA_FW_VERSI
 from openpilot.selfdrive.car.honda.values import FW_VERSIONS as HONDA_FW_VERSIONS
 from openpilot.selfdrive.car.hyundai.values import FW_VERSIONS as HYUNDAI_FW_VERSIONS
 from openpilot.selfdrive.car.volkswagen.values import FW_VERSIONS as VW_FW_VERSIONS
+import secrets
 
 
 FWS = {}
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     for candidate, fws in FWS.items():
       fw_dict = {}
       for (_, addr, subaddr), fw_list in fws.items():
-        fw_dict[(addr, subaddr)] = [random.choice(fw_list)]
+        fw_dict[(addr, subaddr)] = [secrets.choice(fw_list)]
 
       matches = match_fw_to_car_fuzzy(fw_dict, log=False, exclude=candidate)
 
