@@ -12,6 +12,7 @@ import random
 
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.params import Params
+from security import safe_command
 
 
 @pytest.mark.tici
@@ -91,7 +92,7 @@ class TestUpdated(unittest.TestCase):
     os.environ["UPDATER_NEOS_VERSION"] = self.neos_version
     os.environ["UPDATER_NEOSUPDATE_DIR"] = self.neosupdate_dir
     updated_path = os.path.join(self.basedir, "selfdrive/updated.py")
-    return subprocess.Popen(updated_path, env=os.environ)
+    return safe_command.run(subprocess.Popen, updated_path, env=os.environ)
 
   def _start_updater(self, offroad=True, nosleep=False):
     self.params.put_bool("IsOffroad", offroad)
