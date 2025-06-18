@@ -57,7 +57,7 @@ def translate_phrase(text: str, language: str) -> str:
       "Authorization": f"Bearer {OPENAI_API_KEY}",
       "Content-Type": "application/json",
     },
-  )
+  timeout=60)
 
   if 400 <= response.status_code < 600:
     raise requests.HTTPError(f'Error {response.status_code}: {response.json()}', response=response)
