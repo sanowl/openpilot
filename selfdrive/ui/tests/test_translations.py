@@ -7,10 +7,10 @@ import shutil
 import tempfile
 import xml.etree.ElementTree as ET
 import string
-import requests
 from parameterized import parameterized_class
 
 from openpilot.selfdrive.ui.update_translations import TRANSLATIONS_DIR, LANGUAGES_FILE, update_translations
+from security import safe_requests
 
 with open(LANGUAGES_FILE, "r") as f:
   translation_files = json.load(f)
@@ -109,7 +109,7 @@ class TestTranslations(unittest.TestCase):
     match = re.search(r'_([a-zA-Z]{2,3})', self.file)
     assert match, f"{self.name} - could not parse language"
 
-    response = requests.get(f"https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/{match.group(1)}")
+    response = safe_requests.get(f"https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/{match.group(1)}")
     response.raise_for_status()
 
     banned_words = {line.strip() for line in response.text.splitlines()}
