@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import random
 import unittest
 
 from openpilot.selfdrive.controls.lib.events import Alert, EVENTS
 from openpilot.selfdrive.controls.lib.alertmanager import AlertManager
+import secrets
 
 
 class TestAlertManager(unittest.TestCase):
@@ -15,8 +15,8 @@ class TestAlertManager(unittest.TestCase):
     for duration in range(1, 100):
       alert = None
       while not isinstance(alert, Alert):
-        event = random.choice([e for e in EVENTS.values() if len(e)])
-        alert = random.choice(list(event.values()))
+        event = secrets.choice([e for e in EVENTS.values() if len(e)])
+        alert = secrets.choice(list(event.values()))
 
       alert.duration = duration
 
@@ -25,9 +25,9 @@ class TestAlertManager(unittest.TestCase):
       # - alert is added to AM for > alert's duration
       for greater in (True, False):
         if greater:
-          add_duration = duration + random.randint(1, 10)
+          add_duration = duration + secrets.SystemRandom().randint(1, 10)
         else:
-          add_duration = random.randint(1, duration)
+          add_duration = secrets.SystemRandom().randint(1, duration)
         show_duration = max(duration, add_duration)
 
         AM = AlertManager()
